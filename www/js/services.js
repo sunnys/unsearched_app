@@ -28,6 +28,7 @@ angular.module('starter')
 .service('AuthService', function($q, $http, USER_ROLES) {
   var LOCAL_TOKEN_KEY = 'yourTokenKey';
   var LOCAL_USERNAME_KEY = 'username';
+  var LOCAL_USER_INFO = 'user_info';
   var username = '';
   var isAuthenticated = false;
   var role = '';
@@ -39,11 +40,17 @@ angular.module('starter')
       useCredentials(token);
     }
   }
+
+  function username(){
+    var username = window.localStorage.getItem(LOCAL_USER_INFO);
+    return parseInt(username);
+  }
  
   function storeUserCredentials(token, response_data) {
     window.localStorage.setItem(LOCAL_TOKEN_KEY, token);
     window.localStorage.setItem(LOCAL_USERNAME_KEY, response_data.name);
-    useCredentials(token, response_data);
+    window.localStorage.setItem(LOCAL_USER_INFO, response_data.id);
+    useCredentials(token, response_data.id);
   }
  
   function useCredentials(token, response_data) {
@@ -69,6 +76,7 @@ angular.module('starter')
     $http.defaults.headers.common['X-Auth-Token'] = undefined;
     window.localStorage.removeItem(LOCAL_TOKEN_KEY);
     window.localStorage.removeItem(LOCAL_USERNAME_KEY);
+    window.localStorage.removeItem(LOCAL_USER_INFO);
   }
  
   var login = function(name, pw) {
@@ -95,6 +103,10 @@ angular.module('starter')
       authorizedRoles = [authorizedRoles];
     }
     return (isAuthenticated && authorizedRoles.indexOf(role) !== -1);
+  };
+
+  var username = function(){
+    return username();
   };
  
   loadUserCredentials();

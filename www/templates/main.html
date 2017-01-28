@@ -1,5 +1,5 @@
 <ion-view>
-  <ion-tabs class="tabs-icon-top tabs-balanced">
+  <!-- <ion-tabs class="tabs-icon-top tabs-balanced">
     
     <ion-tab title="Dashboard" icon="ion-home" href="#/main/dash">
       <ion-nav-view name="dash-tab"></ion-nav-view>
@@ -12,6 +12,18 @@
     <ion-tab title="Secret" icon="ion-nuclear" href="#/main/admin">
       <ion-nav-view name="admin-tab"></ion-nav-view>
     </ion-tab>
+
+    <ion-tab title="Map" icon="ion-nuclear" href="#/main/map">
+      <ion-nav-view name="map-tab"></ion-nav-view>
+    </ion-tab>
     
-  </ion-tabs>
+  </ion-tabs> -->
+
+  <ion-content>
+    <div id="map" data-tap-disabled="true"></div>
+
+    <div class="bar bar-footer bar-energized">
+      <div class="title" ng-click="addMemory()">Mark your memories</div>
+    </div>
+  </ion-content>
 </ion-view>

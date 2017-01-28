@@ -1,0 +1,59 @@
+<ion-view view-title="My Memory Form Page">  
+     
+      <ion-content class="padding">
+       
+        <form>
+          
+          <div class="kv-avatar center-block" style="width:200px">
+            <input id="avatar-2" name="avatar-2" type="file" class="file-loading">
+            <ion-content ng-controller="FormCtrl">
+              <button class="button" ng-click="openPhotoLibrary()">Upload From Assets</button>
+          </ion-content>
+          </div>
+          <br>
+
+          <label class="item item-input">
+            <span class="input-label">Title</span>
+            <input type="text" ng-model="$parent.title">
+          </label>
+          <br>
+          <label class="item item-input">
+            <span class="input-label">Description</span>
+            <textarea rows="3" ng-model="$parent.description"></textarea>
+          </label>
+          <br>
+           
+          <button class="button button-full button-positive" type="submit" ng-click="openModal()">
+            Theme for your memory
+          </button>
+             
+        </form>   
+         
+      </ion-content>
+       <script id="my-modal.html" type="text/ng-template">
+        <ion-modal-view>
+          <ion-modal-view>
+            <ion-header-bar class="bar bar-header bar-positive">
+              <h1 class="title">Select Theme</h1>
+              <button class="button button-clear button-primary" ng-click="modal.hide()">Cancel</button>
+            </ion-header-bar>
+            <ion-content class="padding">
+              <ion-list show-delete="shouldShowDelete" show-reorder="shouldShowReorder" can-swipe="listCanSwipe">
+                <ion-item ng-repeat="theme in themes" style="background-color:{{theme.color}}"> 
+                  <div style="background-color:{{theme.color}}">
+                  <h2>{{theme.name}}</h2>
+                  </div>
+                  <ion-option-button  class="button-light icon {{theme.icon}}" ></ion-option-button>
+                  
+                </ion-item>
+              </ion-list>
+              
+             
+                
+              <button class="button button-full button-positive" ng-click="createContact(newUser)">Save</button>
+              </div>
+            </ion-content>
+          </ion-modal-view>
+        </ion-modal-view>
+      </script>
+    </ion-view>

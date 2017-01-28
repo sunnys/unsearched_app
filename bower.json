@@ -6,6 +6,8 @@
   },
   "dependencies": {
     "angular-local-storage": "^0.5.2",
-    "angular-mocks": "^1.5.8"
+    "angular-mocks": "^1.5.8",
+    "ngCordova": "^0.1.27-alpha",
+    "js-marker-clusterer": "*"
   }
 }
