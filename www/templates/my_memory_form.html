@@ -3,12 +3,19 @@
       <ion-content class="padding">
        
         <form>
-          
+          <ion-content>
+            <img ng-src="{{pathForImage(image)}}" style="width: 100%; height: 100%;">
+          </ion-content>
           <div class="kv-avatar center-block" style="width:200px">
             <input id="avatar-2" name="avatar-2" type="file" class="file-loading">
             <ion-content ng-controller="FormCtrl">
-              <button class="button" ng-click="openPhotoLibrary()">Upload From Assets</button>
-          </ion-content>
+              <!-- <button class="button" ng-click="openPhotoLibrary()">Upload From Assets</button> -->
+              <div class="button-bar">
+                <button class="button icon-left ion-camera" ng-click="loadImage()">Take Photo</button>
+                <button class="button icon-left ion-upload" ng-click="uploadImage()" ng-disabled="image === null">Upload</button>
+              </div>
+
+            </ion-content>
           </div>
           <br>
 
@@ -39,9 +46,9 @@
             </ion-header-bar>
             <ion-content class="padding">
               <ion-list show-delete="shouldShowDelete" show-reorder="shouldShowReorder" can-swipe="listCanSwipe">
-                <ion-item ng-repeat="theme in themes" style="background-color:{{theme.color}}"> 
+                <ion-item ng-repeat="theme in themes" style="background-color:{{theme.color}}" ng-click="addTheme(theme)"> 
                   <div style="background-color:{{theme.color}}">
-                  <h2>{{theme.name}}</h2>
+                   <h2>{{theme.name}}</h2>
                   </div>
                   <ion-option-button  class="button-light icon {{theme.icon}}" ></ion-option-button>
                   
@@ -50,7 +57,7 @@
               
              
                 
-              <button class="button button-full button-positive" ng-click="createContact(newUser)">Save</button>
+              <button class="button button-full button-positive" ng-click="addDetails()">Save</button>
               </div>
             </ion-content>
           </ion-modal-view>

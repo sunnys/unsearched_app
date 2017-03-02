@@ -71,12 +71,59 @@ angular.module('starter')
       });
   };
 })
-.controller('FormCtrl', function($scope, $state, $ionicPopup, AuthService, $stateParams,$http, $ionicModal) {
+.controller('FormCtrl', function($scope, $cordovaCamera, $ionicActionSheet,$cordovaFile, $cordovaFileTransfer, $cordovaDevice, $state, $ionicPopup, AuthService, Camera, $stateParams,$http, $ionicModal, $ionicPopup, $cordovaActionSheet) {
   $scope.data = {};
 
   $http.get('http://localhost:3000/api/v1/themes').then(function(themes){
     $scope.themes = themes.data;
     // console.log(themes);
+
+    $scope.theme_id = $scope.themes[0].id;
+  });
+
+  $scope.pathForImage = function(image) {
+    if (image === null) {
+      return '';
+    } else {
+      return '';
+    }
+  };
+
+  $scope.image = null;
+ 
+  $scope.showAlert = function(title, msg) {
+    var alertPopup = $ionicPopup.alert({
+      title: title,
+      template: msg
+    });
+  };
+
+  // Present Actionsheet for switch beteen Camera / Library
+  $scope.loadImage = function() {
+    var options = {
+      title: 'Select Image Source',
+      buttonLabels: ['Load from Library', 'Use Camera'],
+      addCancelButtonWithLabel: 'Cancel',
+      androidEnableCancelButton : true,
+    };
+    $cordovaActionSheet.show(options).then(function(btnIndex) {
+      var type = null;
+      if (btnIndex === 1) {
+        type = Camera.PictureSourceType.PHOTOLIBRARY;
+      } else if (btnIndex === 2) {
+        type = Camera.PictureSourceType.CAMERA;
+      }
+      if (type !== null) {
+        $scope.selectPicture(type);
+      }
+    });
+  };
+
+  $http.get('http://localhost:3000/api/v1/my_memories/'+ $stateParams.memoryId).then(function(memory){
+    $scope.title = memory.data.title;
+    $scope.description = memory.data.description;
+    console.log($scope.title);
+    $scope.theme_id = memory.data.theme_id;
   });
 
   $ionicModal.fromTemplateUrl('my-modal.html', {
@@ -95,6 +142,12 @@ angular.module('starter')
   $scope.$on('$destroy', function() {
     $scope.modal.remove();
   });
+
+  $scope.addTheme = function(theme){
+    console.log(theme.id);
+    $scope.theme_id = theme.id;
+
+  };
   $scope.openPhotoLibrary = function() {
       var options = {
           quality: 50,
@@ -149,10 +202,9 @@ angular.module('starter')
 
     var my_memory = {
       title: $scope.title,
-      description: $scope.description
+      description: $scope.description,
+      theme_id: $scope.theme_id
     };
-
-    console.log(my_memory);
     url = 'http://localhost:3000/api/v1/my_memories/'+$stateParams.memoryId;
     $http.patch(url, {my_memory: my_memory}).then(function (res){
       $scope.response = res.data;
@@ -170,7 +222,32 @@ angular.module('starter')
   var options = {timeout: 10000, enableHighAccuracy: true};
   
   $cordovaGeolocation.getCurrentPosition(options).then(function(position){
- 
+    function pinSymbol(color) {
+      return {
+        path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z M -2,-30 a 2,2 0 1,1 4,0 2,2 0 1,1 -4,0',
+        fillColor: color,
+        fillOpacity: 1,
+        strokeColor: '#000',
+        strokeWeight: 2,
+        scale: 1,
+      };
+    }
+
+    $http.get('http://localhost:3000/api/v1/my_memories/user_memories/'+ parseInt(window.localStorage.getItem('user_info'))).then(function(all_memories){
+      angular.forEach(all_memories.data, function(value, key) {
+        console.log(value);
+        var latLng = new google.maps.LatLng(value.locations[0].lat, value.locations[0].log);
+        var marker = new google.maps.Marker({
+          map: $scope.map,
+          animation: google.maps.Animation.DROP,
+          position: latLng,
+          title: value.title,
+          icon: pinSymbol(value.theme_color)
+        });
+      
+      });
+    });
+
     var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
  
     var mapOptions = {
